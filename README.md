@@ -1,5 +1,6 @@
 # Data_Detectives
-Hackatathon
+Hackathon
 
-Create a form that allows the ingestion of a given site and then adds the site to 
-the HPC-ED database
+GitHub Lead:
+
+This project involves creating a form that allows users to input a site URL, which is then ingested and added to the HPC-ED (High-Performance Computing and Engineering Data) database. The form validates the input and processes the site data for storage and further analysis.
