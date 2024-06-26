@@ -1,0 +1,30 @@
+# Import necessary libraries
+import requests
+from bs4 import BeautifulSoup
+import pandas as pd
+
+# Define the URL to be scraped
+url = "https://www.gridgain.com/resources/glossary/high-performance-computing?utm_feeditemid=&utm_device=c&utm_term=hpc&utm_source=google&utm_medium=ppc&utm_campaign=PAM+GridGain+Use+Cases+-+US+%26+Canada&hsa_cam=19930741562&hsa_grp=150571241489&hsa_mt=p&hsa_src=g&hsa_ad=653908591400&hsa_acc=1578237114&hsa_net=adwords&hsa_kw=hpc&hsa_tgt=kwd-109235563&hsa_ver=3&gad_source=1&gclid=CjwKCAjw-O6zBhASEiwAOHeGxRjNZxL3EeLAaG-E1AmKTjn8ENzrFjFRTfqyIWOZMgYTgiXPHibPqBoC-N0QAvD_BwE"
+
+# Make a GET request to fetch the raw HTML content
+html = requests.get(url)
+
+# Parse the HTML content using BeautifulSoup
+s = BeautifulSoup(html.text, 'html.parser')
+
+# Find the div that contains the desired content
+box = s.find('div', class_= 'col')
+
+# Extract the title text
+title = box.find('h3').get_text()
+
+# Extract the content text
+content1 = box.find('p').get_text()
+
+# Define a function to print all paragraphs within the box
+def web_printer():
+    for i in box:  # Loop through the content
+        print(i.text)
+
+# Call the function to print the content
+web_printer()
