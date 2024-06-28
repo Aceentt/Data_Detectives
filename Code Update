@@ -1,0 +1,57 @@
+app = Flask(__name__)
+
+@app.route('/')
+def hello_world():
+    return 'Hello, World!'
+
+@app.route('/hello_world_2')
+def hello_world_2():
+    return 'Data Detectives'
+
+@app.route('/scrape')
+def scrape():
+    url = "https://www.gridgain.com/resources/glossary/high-performance-computing?utm_feeditemid=&utm_device=c&utm_term=hpc&utm_source=google&utm_medium=ppc&utm_campaign=PAM+GridGain+Use+Cases+-+US+%26+Canada&hsa_cam=19930741562&hsa_grp=150571241489&hsa_mt=p&hsa_src=g&hsa_ad=653908591400&hsa_acc=1578237114&hsa_net=adwords&hsa_kw=hpc&hsa_tgt=kwd-109235563&hsa_ver=3&gad_source=1"
+    html = requests.get(url)
+
+    s = BeautifulSoup(html.text, 'html.parser')
+    box = s.find('div', class_='col')
+
+    # Extracting the dynamic fields
+    title = box.find('h3').get_text()
+    content1 = box.find('p').get_text()
+
+    # Assuming the other fields are available in the following manner:
+    # (Replace these with the correct selectors based on the actual HTML structure)
+
+    # Example of how other fields might be extracted
+    resource_url_type = 'URL'  # Static as example
+    language = 'en'  # Static as example
+    cost = 'no'  # Static as example
+    id_ = 'std'  # Static as example
+    visible_to = ['public']  # Static as example
+    expertise_level = 'Beginner'  # Static as example
+    learning_outcome = 'Understand'  # Static as example
+    learning_resource_type = 'free text'  # Static as example
+    license_ = None  # Static as example
+
+    scraped_data = {
+        'title': title,
+        'Url': url,
+        'Resource_URL_Type': resource_url_type,
+        'Language': language,
+        'Cost': cost,
+        'id': id_,
+        'visible_to': visible_to,
+        'Expertise_Level': expertise_level,
+        'Learning_Outcome': learning_outcome,
+        'Learning_Resource_Type': learning_resource_type,
+        'License': license_
+    }
+
+    return jsonify(scraped_data)
+
+if __name__ == '__main__':
+    app.run(debug=True, host='0.0.0.0', port=5000)
+if __name__ == '__main__':
+    app.run(debug=True, host='0.0.0.0', port=5000)
+"
