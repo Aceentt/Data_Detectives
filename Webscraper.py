@@ -1,32 +1,67 @@
+from flask import Flask, jsonify
 import requests
 from bs4 import BeautifulSoup
-import pandas as pd
 
+app = Flask(__name__)
 
+@app.route('/')
+def hello_world():
+    return 'Hello, World!'
 
-url = "https://www.gridgain.com/resources/glossary/high-performance-computing?utm_feeditemid=&utm_device=c&utm_term=hpc&utm_source=google&utm_medium=ppc&utm_campaign=PAM+GridGain+Use+Cases+-+US+%26+Canada&hsa_cam=19930741562&hsa_grp=150571241489&hsa_mt=p&hsa_src=g&hsa_ad=653908591400&hsa_acc=1578237114&hsa_net=adwords&hsa_kw=hpc&hsa_tgt=kwd-109235563&hsa_ver=3&gad_source=1&gclid=CjwKCAjw-O6zBhASEiwAOHeGxRjNZxL3EeLAaG-E1AmKTjn8ENzrFjFRTfqyIWOZMgYTgiXPHibPqBoC-N0QAvD_BwE" 
-html = requests.get(url)
+@app.route('/hello_world_2')
+def hello_world_2():
+    return 'Data Detectives'
 
-s = BeautifulSoup(html.text, 'html.parser')
-#print(s.prettify()) #(prints website html transcript (just for fun))
-"""
-results = s.find(id= 'block-gridgain2021-content') #allows us to search "block grid grain content" for the main body text
-main_text = results.find('h3', class_ = 'mt-5')
-for i in main_text:
-    print(i.text)
-"""
-box = s.find('div', class_= 'col') #boxing in the content that we want to scrape
+@app.route('/scrape')
+def scrape():
+    url = "https://www.gridgain.com/resources/glossary/high-performance-computing?utm_feeditemid=&utm_device=c&utm_term=hpc&utm_source=google&utm_medium=ppc&utm_campaign=PAM+GridGain+Use+Cases+-+US+%26+Canada&hsa_cam=19930741562&hsa_grp=150571241489&hsa_mt=p&hsa_src=g&hsa_ad=653908591400&hsa_acc=1578237114&hsa_net=adwords&hsa_kw=hpc&hsa_tgt=kwd-109235563&hsa_ver=3&gad_source=1&gclid=CjwKCAjw-O6zBhASEiwAOHeGxRjNZxL3EeLAaG-E1AmKTjn8ENzrFjFRTfqyIWOZMgYTgiXPHibPqBoC-N0QAvD_BwE"
+    html = requests.get(url)
 
-title =box.find('h3').get_text() # finds title section wihtin html
+    s = BeautifulSoup(html.text, 'html.parser')
+    box = s.find('div', class_='col')
 
-content1 = box.find('p').get_text() #finds text section under title within html
+    # Extracting the dynamic fields
+    Title = box.find('h3').get_text()
+    Content1 = box.find('p').get_text()
 
+    # Static values
+    resource_url_type = 'URL'
+    language = 'en'
+    cost = 'no'
+    id_ = 'std'
+    visible_to = ['public']
+    expertise_level = 'Beginner'
+    learning_outcome = 'Understand'
+    learning_resource_type = 'free text'
+    license_ = None
+    Author_name = ['Grid Gain']
+    key_words = None
+    target_groups = ['Students', 'Researchers']
+    start = None
+    time = None
+    rating = None
 
-#print(title)
-#print(content1)
+    scraped_data = {
+        'Title': title,
+        'Url': url,
+        'Resource_URL_Type': resource_url_type,
+        'Language': language,
+        'Cost': cost,
+        'id': id_,
+        'visible_to': visible_to,
+        'Authors': author_name,
+        'Expertise_Level': expertise_level,
+        'Keywords': key_words,
+        'Learning_Outcome': learning_outcome,
+        'Learning_Resource_Type': learning_resource_type,
+        'License': license_,
+        'Target_Group': target_groups,
+        'Start_Datetime': start,
+        'Duration': time,
+        'Rating': rating
+    }
 
-def web_printer():
-    for i in box: #loop to print all paragraphs
-        print(i.text)
+    return jsonify(scraped_data)
 
-web_printer()
+if __name__ == '__main__':
+    app.run(debug=True, host='0.0.0.0', port=5000)
